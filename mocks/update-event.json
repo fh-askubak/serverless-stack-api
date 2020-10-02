@@ -1,0 +1,11 @@
+{
+  "body": "{\"content\":\"UpD@T3D W0RLD\"}",
+  "pathParameters": {
+    "id": "1dc52ad0"
+  },
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "USER-SUB-1234"
+    }
+  }
+}

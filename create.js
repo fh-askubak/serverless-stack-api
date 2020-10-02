@@ -1,13 +1,9 @@
 import * as uuid from 'uuid';
-import AWS from 'aws-sdk';
+import handler from './libs/handler-lib';
+import dynamoDb from './libs/dynamodb-lib';
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
-
-export function main(event, context, callback) {
-  //reqest body is pass as json encoded string in event.body
+export const main = handler(async (event, context) => {
   const data = JSON.parse(event.body);
-
-  //params
   const params = {
     TableName: process.env.tableName,
     // 'Item' contains the attributes of the item to be created
@@ -16,7 +12,6 @@ export function main(event, context, callback) {
     //             as the user id of the authenticated user
     // - 'noteId': a unique uuid
     // - 'content': parsed from request body
-    // - 'attachment': parsed from request body
     // - 'createdAt': current Unix timestamp
     Item: {
       userId: event.requestContext.identity.cognitoIdentityId,
@@ -26,31 +21,7 @@ export function main(event, context, callback) {
     }
   };
 
-  //put
-  dynamoDb.put(params, (error, data) => {
-    //set response headers to enable cors
-    const headers = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Credentials": true
-    };
+  await dynamoDb.put(params);
 
-    //error handling
-    if (error) {
-      const response = {
-        statusCode: 500,
-        headers: headers,
-        body: JSON.stringify({ status: false })
-      };
-      callback(null, response);
-      return;
-    }
-
-    //return 200 and newley created item
-    const response = {
-      statusCode: 200,
-      headers: headers,
-      body: JSON.stringify(params.Item)
-    };
-    callback(null, response);
-  });
-}
+  return params.Item;
+});

@@ -25,6 +25,7 @@ export const main = handler(async (event, context) => {
   };
 
   const result = await dynamoDb.update(params);
+  console.log('update result', result);
 
   return { status: true };
 });

@@ -77,6 +77,20 @@ functions:
           method: delete
           cors: true
           authorizer: aws_iam
+  encrypt:
+    handler: encrypt.main
+    events:
+      - http:
+          path: encrypt
+          method: post
+          cors: true
+  compare:
+    handler: encrypt.compare
+    events:
+      - http:
+          path: encrypt/compare
+          method: post
+          cors: true
 
 resources:
   #API gateway errors
